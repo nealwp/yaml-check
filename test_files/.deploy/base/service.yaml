@@ -1,12 +1,12 @@
 apiVersion: v1
 kind: Service
 metadata:
-    name: my-new-service
-    labels:
-        app: my-new-service
+  name: my-new-service
+  labels:
+      app: my-new-service
 spec:
-    selector:
-        app: my-new-service
-    ports:
-        - name: http
-          port: 8000
+  selector:
+    app: my-new-service
+  ports:
+    - name: http
+      port: 8000

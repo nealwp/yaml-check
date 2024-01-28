@@ -1,0 +1,24 @@
+apiVersion: argoproj.io/v1alpha1
+kind: Application
+metadata:
+    name: my-new-service
+    namespace: argocd
+spec:
+    project: default
+    source:
+        repoURL: git@github.com:myorg/my_manifest_repo
+        path: my_new_service/
+        targetRevision: TARGET_ENVIRONMENT
+    destination:
+        server: 'https://kubernetes.default.svc'
+        namespace: default
+    syncPolicy:
+        automated:
+            prune: true
+            selfHeal: true
+        retry:
+            limit: 5
+            backoff:
+                duration: 30s
+                factor: 2
+                maxDuration: 5m

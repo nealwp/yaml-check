@@ -1,0 +1,23 @@
+apiVersion: security.istio.io/v1beta1
+kind: AuthorizationPolicy
+metadata: 
+  name: my-new-service
+  namespace: istio-system
+spec:
+  action: DENY
+  rules:
+  - from:
+    - source:
+        notRequestPrincipals:
+        - '*'
+    to:
+    - operation:
+        paths:
+        - /my/endpoint
+        - /my/endpoint/*
+        ports: ['8443']
+        notMethods:
+        - OPTIONS
+  selector:
+    matchLabels:
+      istio: ingressgateway

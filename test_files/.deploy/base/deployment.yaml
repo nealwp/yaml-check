@@ -1,0 +1,25 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: my-new-service
+  labels:
+    app: my-new-service
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: my-new-service
+  template:
+    metadata:
+      labels:
+        app: my-new-service
+    spec:
+      containers:
+      - name: my-new-service
+        image: gcr.io/my-org/my_new_service:COMMIT_SHA
+        imagePullPolicy: IfNotPresent
+        ports:
+        - containerPort: 8000
+        env:
+        - name: ENVIRONMENT
+          value: 'local'

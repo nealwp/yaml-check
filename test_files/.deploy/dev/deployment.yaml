@@ -1,0 +1,23 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: my-new-service
+  labels:
+      app: my-new-service
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: my-new-service
+  template:
+    metadata:
+      labels:
+        app: my-new-service
+    spec:
+      containers:
+      - name: my-new-service
+        env:
+        - name: ENVIRONMENT
+          value: 'dev'
+        - name: BASE_URL
+          value: 'https://dev.my-site.com'

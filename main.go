@@ -1,66 +1,34 @@
 package main
 
 import (
-	"fmt"
 	"log"
 	"os"
 
-	"gopkg.in/yaml.v3"
+	"github.com/nealwp/yaml-check/validator"
 )
 
-type Kustomization struct {
-	Resources []string `yaml:"resources"`
-}
+type Validation func(content []byte)
 
-type Service struct {
-	ApiVersion string `yaml:"apiVersion"`
-	Kind       string `yaml:"kind"`
-	Metadata   struct {
-		Name   string `yaml:"name"`
-		Labels struct {
-			App string `yaml:"app"`
-		} `yaml:"labels"`
-	} `yaml:"metadata"`
-	Spec struct {
-		Selector struct {
-			App string `yaml:"app"`
-		} `yaml:"selector"`
-		Ports []struct {
-			Name string `yaml:"name"`
-			Port int    `yaml:"port"`
-		} `yaml:"ports"`
-	} `yaml:"spec"`
+type YamlFile struct {
+    Path string
+    Validate Validation 
 }
 
 func main() {
-	dat, err := os.ReadFile("./test_files/.deploy/base/kustomization.yaml")
-	if err != nil {
-		log.Fatal(err)
-	}
 
-	k := Kustomization{}
+    files := []YamlFile{
+        {Path: "./test_files/.deploy/base/kustomization.yaml", Validate: validator.ValidateKustomization},
+        {Path: "./test_files/.deploy/base/service.yaml", Validate: validator.ValidateService},
+    }
 
-	err = yaml.Unmarshal(dat, &k)
+    for _, file := range files {
+        content, err := os.ReadFile(file.Path)
+        if err != nil {
+            log.Fatal(err)
+        }
 
-	if err != nil {
-		log.Fatal(err)
-	}
+        file.Validate(content)
+    }
 
-	// we should have 4 elements in this list
-	fmt.Print(k)
-
-	dat, err = os.ReadFile("./test_files/.deploy/base/service.yaml")
-
-	if err != nil {
-		log.Fatal(err)
-	}
-	s := Service{}
-
-	err = yaml.Unmarshal(dat, &s)
-
-	if err != nil {
-		log.Fatal(err)
-	}
-
-	fmt.Print(s)
+    return
 }

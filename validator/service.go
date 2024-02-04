@@ -1,8 +1,6 @@
 package validator
 
 import (
-	"log"
-
 	"gopkg.in/yaml.v3"
 )
 
@@ -26,15 +24,15 @@ type Service struct {
 	} `yaml:"spec"`
 }
 
-func ValidateService(content []byte) {
+func ValidateService(content []byte) error {
 
 	s := Service{}
 
-    err := yaml.Unmarshal(content, &s)
+	err := yaml.Unmarshal(content, &s)
 
 	if err != nil {
-		log.Fatal(err)
+		return err
 	}
 
-    return
+	return nil
 }
